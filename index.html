@@ -1,13 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Javascript Quiz</title>
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- <link rel="stylesheet" href="./assets/css/style.css"> -->
 </head>
-<body>    
+
+<body>
+
+    <!--Header-->
+    <header>
+        <button class="button-link" id="view">View high scores</button>
+        <section class="timer">
+            <h1 id="countdown"></h1>
+        </section>
+    </header>
+
+    <!--Intro Page-->
+    <div id="intro" class="intro">
+        <h2 class="quiz-title">Coding Quiz Challenge</h2>
+        <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers
+            will penalize your time(score) by ten seconds!</p>
+        <div>
+            <button id="start" class="button">Start Quiz</button>
+        </div>
+    </div>
+
+    <!--Quiz Questions-->
+    <div id="quiz">
+        <div id="question" class="question">
+            <p>Question</p>
+        </div>
+        <div id="choices">
+            <button id="A" class="button">A</button>
+            <br>
+            <button id="B" class="button">B</button>
+            <br>
+            <button id="C" class="button">C</button>
+            <br>
+            <button id="D" class="button">D</button>
+        </div>
+    </div>
+
+    <!--Display User Score and Input Initials-->
+    <div id="initials">
+        <h3 class="question">All done!</h3>
+        <div id="yourscore" class="form"></div>
+        <form class="form">
+            <label for="name">Enter Initials</label>
+            <input type="text" placeholder="AA" name="name" id="inpName" />
+        </form>
+        <button id="submit" class="button">Submit</button>
+    </div>
+
+    <!--Scoreboard Display-->
+    <div id="scoreboard">
+        <h3 class="question">High Scores</h3>
+        <ul id="display-score" class="display-score">
+            <li></li>
+        </ul>
+        <button id="back" class="button">Go Back</button>
+        <br>
+        <button id="clear" class="button">Clear High Scores</button>
+    </div>
+
+    <!--Link to js file-->
     <script src="./assets/js/script.js"></script>
 </body>
+
 </html>
