@@ -160,8 +160,8 @@ function highScores() {
 
     //LocalStorage Items and For Loop
     for (let i = 0; i < localStorage.length-1; i++) {
-        var userNameDisplay = localStorage.getItem("initialsInput");
-        var scorePercent = localStorage.getItem("scorestring");
+        var userNameDisplay = localStorage.getItem("initials");
+        var scorePercent = localStorage.getItem("yourscore");
         scorePercent = JSON.parse(scorePercent);
 
         var node = document.createElement("li");
