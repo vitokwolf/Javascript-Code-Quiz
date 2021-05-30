@@ -43,7 +43,6 @@ var questions = [
 ];
 
 // Timer Countdown Function
-//Timer
 var timerEl = document.getElementById("countdown");
 var timeLeft = 60;
 
@@ -104,12 +103,12 @@ function checkAnswer(answer) {
         alert("Incorrect! Uh oh!");
         timeLeft = timeLeft - 10;
     };
-    if (runningQuestion < questions.length-1) {
+    if (runningQuestion < questions.length - 1) {
         runningQuestion++;
         renderQuestion();
     }
     else {
-        // render score function;
+        scoreRender();
         timeLeft = 99999999;
         timerEl.style.display = "none";
     }
@@ -124,7 +123,69 @@ function startQuiz() {
     countdown();
     intro.style.display = "none";
     renderQuestion();
-    quiz.style.display = "block";
+    quiz.style.display = "inline-block";
 };
 
 startBtn.addEventListener("click", startQuiz);
+
+//Scoring Pages
+var initials = document.getElementById("initials");
+var scoreboard = document.getElementById("scoreboard");
+
+// Function to Display Score/ End of Quiz
+function scoreRender() {
+    quiz.style.display = "none";
+    initials.style.display = "block";
+    var scorePercent = Math.round(100 * score / questions.length);
+    document.getElementById("yourscore").innerHTML = "Your final score is " + scorePercent + "%.";
+    localStorage.setItem("yourscore", JSON.stringify(scorePercent));
+};
+
+// Local Storage for Initials Input
+var initialsInput = document.getElementById("inpName");
+var submit = document.getElementById("submit");
+
+// Submitting and Storing High Scores
+submit.addEventListener("click", function (event) {
+    localStorage.setItem("initials", initialsInput.value);
+    highScores();
+});
+
+// Display Scoreboard Page Function
+function highScores() {
+    intro.style.display = "none";
+    quiz.style.display = "none";
+    initials.style.display = "none";
+    scoreboard.style.display = "block";
+
+    //LocalStorage Items and For Loop
+    for (let i = 0; i < localStorage.length-1; i++) {
+        var userNameDisplay = localStorage.getItem("initialsInput");
+        var scorePercent = localStorage.getItem("scorestring");
+        scorePercent = JSON.parse(scorePercent);
+
+        var node = document.createElement("li");
+        var textnode = document.createTextNode(userNameDisplay + " - " + scorePercent);
+        node.appendChild(textnode);
+        document.getElementById("display-score").appendChild(node);
+    }
+};
+
+//View high scores header button
+document.getElementById("view").addEventListener("click", highScores);
+
+
+//Return Button on Scoreboard Screen
+document.getElementById("back").addEventListener("click", goBack);
+
+function goBack() {
+    location.reload();
+    return false;
+}
+
+
+// Clear High Scores Button
+document.getElementById("clear").addEventListener("click", function () {
+    localStorage.clear();
+    alert("Scores have been cleared. Please refresh your page.")
+});
