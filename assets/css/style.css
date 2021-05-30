@@ -94,7 +94,7 @@ header h1 {
 }
 
 .display-score {
-    background-color: lavender;
+    border: 0.2rem solid lavender;
     padding: 10px 10px 10px 10px;
     margin: 10px 100px 10px 200px;
     list-style-type: none;
