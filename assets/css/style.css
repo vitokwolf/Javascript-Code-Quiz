@@ -80,6 +80,16 @@ header h1 {
     padding: 10px 200px 10px 200px;
 }
 
+#answer {
+    font-size: 3rem;
+    font-style: italic;
+    text-align: right;
+    color: rgba(240,218,211,20%);
+    padding: 50px;
+    margin: 30px 200px 10px 200px;
+    border-top: 1px solid rgba(240,218,211,20%);
+}
+
 /* Scoring */
 #initials {
     display: none;
