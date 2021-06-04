@@ -42,10 +42,39 @@ var questions = [
     }
 ];
 
-// Timer Countdown Function
-var timerEl = document.getElementById('countdown');
-var timeLeft = 60;
+// Global Variables Start
 
+ // Timer Countdown Function
+ var timerEl = document.getElementById('countdown');
+ var timeLeft = 60;
+
+ //Key Variables
+ var runningQuestion = 0;
+ var score = 0;
+ var scorePercent = 0;
+
+ //Quiz and Questions
+ var question = document.getElementById('question');
+ var choiceA = document.getElementById('A');
+ var choiceB = document.getElementById('B');
+ var choiceC = document.getElementById('C');
+ var choiceD = document.getElementById('D');
+ var answerDisplay = document.getElementById('answer');
+
+ // Start Timer and Quiz
+ var intro = document.getElementById('intro');
+ var quiz = document.getElementById('quiz');
+ var startBtn = document.getElementById('start');
+
+ //Scoring Pages Variables
+ var inpName = document.getElementById('inpName');
+ var scoreboard = document.getElementById('scoreboard');
+ var initials = document.getElementById('initials');
+ var scoreList = document.getElementById('highscore');
+ var yourscore = document.getElementById('yourscore');
+// Global Variables End
+
+// Timer Start
 function countdown() {
     var timeInterval = setInterval(function () {
         if (timeLeft > 5) {
@@ -69,22 +98,10 @@ function countdown() {
         }
     }, 1000);
 };
+// Timer End
 
 
-
-//Key Variables
-var runningQuestion = 0;
-var score = 0;
-
-//Quiz and Questions
-var question = document.getElementById('question');
-var choiceA = document.getElementById('A');
-var choiceB = document.getElementById('B');
-var choiceC = document.getElementById('C');
-var choiceD = document.getElementById('D');
-var answerDisplay = document.getElementById('answer');
-
-// Function to display quiz questions
+// Display Quiz Questions
 function renderQuestion() {
     var q = questions[runningQuestion];
     question.innerHTML = q.question;
@@ -98,6 +115,7 @@ function renderQuestion() {
 function checkAnswer(answer) {
     if (answer == questions[runningQuestion].correct) {
         score++;
+        scorePercent = Math.round(100 * score / questions.length);
         answerDisplay.innerHTML = 'Correct! Way to Go!';
     }
     else {
@@ -105,22 +123,19 @@ function checkAnswer(answer) {
         timeLeft = timeLeft - 10;
     };
     if (runningQuestion < questions.length - 1) {
-        runningQuestion ++;
+        runningQuestion++;
         renderQuestion();
     }
     else {
         alert('Congratulations! There is still time left! Lets see your score!');
         scoreRender();
+        // couldn't figure out how to stop timer here :P
         timeLeft = 99999999;
         timerEl.style.display = 'none';
     }
 };
 
-// Start Timer and Quiz
-var intro = document.getElementById('intro');
-var quiz = document.getElementById('quiz');
-var startBtn = document.getElementById('start');
-
+// Main Quiz Functionality
 function startQuiz() {
     countdown();
     intro.style.display = 'none';
@@ -130,41 +145,72 @@ function startQuiz() {
 
 startBtn.addEventListener('click', startQuiz);
 
-//Scoring Pages
-var initials = document.getElementById('initials');
-var scoreboard = document.getElementById('scoreboard');
-
 // Function to Display Score/ End of Quiz
 function scoreRender() {
     quiz.style.display = 'none';
     initials.style.display = 'block';
-    var scorePercent = Math.round(100 * score / questions.length);
-    document.getElementById('yourscore').innerHTML = 'Your final score is ' + scorePercent + '%.';
-    localStorage.setItem('yourscore', JSON.stringify(scorePercent));
+    yourscore.innerHTML = 'Your final score is ' + scorePercent + '%.';
 };
 
-// Local Storage for Initials Input
-var initialsInput = document.getElementById('inpName');
-var submit = document.getElementById('submit');
+// Display Scoreboard Page Start
+var highScores = function () {
 
-// Submitting and Storing High Scores
-submit.addEventListener('click', function (event) {
-    localStorage.setItem('initials', initialsInput.value);
-    highScores();
-});
-
-// Display Scoreboard Page Function
-function highScores() {
+    // Hide questions and show highscores
     intro.style.display = 'none';
     quiz.style.display = 'none';
     initials.style.display = 'none';
     scoreboard.style.display = 'block';
 
-    var userNameDisplay = localStorage.getItem('initials');
-    var scorePercent = localStorage.getItem('yourscore');
-    scorePercent = JSON.parse(scorePercent);
-    document.getElementById('scorerender').innerHTML = userNameDisplay + ' - ' + scorePercent;
+    // retrieve highscores from local storage
+    var newScoreArray = localStorage.getItem('highscores');
+
+    // check if there is any highscores stored
+    if (!newScoreArray) {
+        // if not 
+        scoreList.innerHTML = 'There are no scores to show';
+    } else {
+        // if yes, parse it into an array
+        scoreArray = JSON.parse(newScoreArray);
+
+        // iterate thru, create new list element for each object and render it
+        for (let i = 0; i < scoreArray.length; i++) {
+            var newNameSpan = document.createElement("li");
+            newNameSpan.textContent = scoreArray[i].initial + ' - ' + scoreArray[i].score;
+            scoreList.appendChild(newNameSpan);
+        }
+    }
 };
+// Display Scoreboard Page End
+
+// Local Storage for Initials Input Start
+var submit = document.getElementById('submit');
+
+// Submitting and Storing High Scores
+submit.onclick = function () {
+    // initialize the highscore array
+    var initial = inpName.value;
+    var score = scorePercent;
+    var scoreArray = [{ initial, score }];
+
+    // check if initials where typed
+    if (initial) {
+        // check if there is any highscores stored in local storage
+        var newScoreArray = localStorage.getItem('highscores');
+
+        if (!newScoreArray) {
+            // if not, save the first highscore
+            localStorage.setItem('highscores', JSON.stringify(scoreArray));
+        } else {
+            // if yes, parse the local storage, merge the stored highscore array with new array and save it to local storage
+            newScoreArray = JSON.parse(newScoreArray);
+            Array.prototype.push.apply(scoreArray, newScoreArray);
+            localStorage.setItem('highscores', JSON.stringify(scoreArray));
+        }
+    };
+    // render the highscores
+    highScores();
+};
+// Local Storage for Initials Input End
 
 //View high scores header button
 document.getElementById('view').addEventListener('click', highScores);
@@ -176,8 +222,7 @@ document.getElementById('back').addEventListener('click', goBack);
 function goBack() {
     location.reload();
     return false;
-}
-
+};
 
 // Clear High Scores Button
 document.getElementById('clear').addEventListener('click', function () {
