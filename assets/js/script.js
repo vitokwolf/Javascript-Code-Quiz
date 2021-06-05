@@ -127,6 +127,8 @@ function countdown() {
 
 // Display Quiz Questions
 function renderQuestion() {
+    intro.style.display = 'none';
+    quiz.style.display = 'block';
     var q = questions[runningQuestion];
     question.innerHTML = q.question;
     choiceA.innerHTML = q.choiceA;
@@ -162,9 +164,7 @@ function checkAnswer(answer) {
 // Main Quiz Functionality
 function startQuiz() {
     countdown();
-    intro.style.display = 'none';
-    renderQuestion();
-    quiz.style.display = 'block';
+    setTimeout(renderQuestion,1000)
 };
 
 startBtn.addEventListener('click', startQuiz);
@@ -227,6 +227,7 @@ submit.onclick = function () {
         } else {
             // if yes, parse the local storage, merge the stored highscore array with new array and save it to local storage
             newScoreArray = JSON.parse(newScoreArray);
+
             Array.prototype.push.apply(scoreArray, newScoreArray);
             localStorage.setItem('highscores', JSON.stringify(scoreArray));
         }
